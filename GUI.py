@@ -1,5 +1,6 @@
 from tkinter import ttk
 from tkinter import messagebox
+from sklearn import preprocessing
 
 import tkinter as tk
 import pandas as pd
@@ -17,6 +18,11 @@ dataFrame = dataFrame.drop(['species'], axis=1)
 
 X = np.asarray(dataFrame)
 Y = np.asarray(Species)
+
+# normalization
+min_max_scalar = preprocessing.MinMaxScaler()
+X = min_max_scalar.fit_transform(X)
+print(X)
 
 # window Creation
 mlp_window = Tk()
