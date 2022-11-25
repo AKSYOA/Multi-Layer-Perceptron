@@ -89,6 +89,6 @@ def run():
 
 
 # run Button
-run_button = Button(mlp_window, text='Run', width=10, command=pressfunction).grid(row=2, column=2, pady=5, padx=8)
+run_button = Button(mlp_window, text='Run', width=10, command=run).grid(row=2, column=2, pady=5, padx=8)
 
 mlp_window.mainloop()
