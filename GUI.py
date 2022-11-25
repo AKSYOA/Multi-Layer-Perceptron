@@ -10,6 +10,12 @@ dataFrame = pd.read_csv('penguins.csv')
 dataFrame['gender'] = dataFrame['gender'].replace(np.NaN, dataFrame['gender'].mode()[0])
 dataFrame['gender'] = dataFrame['gender'].map({'male': 0, 'female': 1})
 
+Species = pd.get_dummies(dataFrame['species'])
+dataFrame = dataFrame.drop(['species'], axis=1)
+
+X = np.asarray(dataFrame)
+Y = np.asarray(Species)
+
 # window Creation
 mlp_window = Tk()
 mlp_window.title('MLP Model')
