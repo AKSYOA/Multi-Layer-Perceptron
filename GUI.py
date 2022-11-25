@@ -84,7 +84,7 @@ def validateInput():
     return True
 
 
-def pressfunction():
+def run():
     print(validateInput())
 
 
