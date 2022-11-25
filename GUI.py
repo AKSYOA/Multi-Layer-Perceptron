@@ -44,16 +44,20 @@ activation_function_label = ttk.Label(text="Activation Function", style="BW.TLab
     .grid(row=0, column=5, pady=5, padx=10)
 
 # Text Boxes Creation
-number_of_hidden_layers_txtbox = tk.Text(mlp_window, height=1, width=17) \
+number_of_hidden_layers = IntVar()
+number_of_hidden_layers_textbox = Entry(mlp_window, width=20, textvariable=number_of_hidden_layers) \
     .grid(row=1, column=0, pady=5, padx=5)
 
-number_of_neurons_txtbox = tk.Text(mlp_window, height=1, width=28) \
+number_of_neurons = IntVar()
+number_of_neurons_textbox = Entry(mlp_window, width=30, textvariable=number_of_neurons) \
     .grid(row=1, column=1, pady=5, padx=5)
 
-learning_rate_txtbox = tk.Text(mlp_window, height=1, width=10) \
+learning_rate = IntVar()
+learning_rate_textbox = Entry(mlp_window, width=10, textvariable=learning_rate) \
     .grid(row=1, column=2, pady=5, padx=5)
 
-number_of_epochs_txtbox = tk.Text(mlp_window, height=1, width=13) \
+number_of_epochs = IntVar()
+number_of_epochs_textbox = Entry(mlp_window, width=13, textvariable=number_of_epochs) \
     .grid(row=1, column=3, pady=5, padx=5)
 
 # bias Checkbox, activation Combobox creation
@@ -67,7 +71,13 @@ activation_function_comboBox.grid(row=1, column=5, pady=5, padx=5)
 
 
 def pressfunction():
-    print('hello, world')
+    print(number_of_hidden_layers.get())
+    print(number_of_neurons.get())
+    print(learning_rate.get())
+    print(number_of_epochs.get())
+    print(bias_value.get())
+    print(activation_function_comboBox.get())
+
 
 
 # run Button
