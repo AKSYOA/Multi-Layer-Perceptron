@@ -48,11 +48,11 @@ number_of_hidden_layers = IntVar()
 number_of_hidden_layers_textbox = Entry(mlp_window, width=20, textvariable=number_of_hidden_layers) \
     .grid(row=1, column=0, pady=5, padx=5)
 
-number_of_neurons = IntVar()
+number_of_neurons = StringVar()
 number_of_neurons_textbox = Entry(mlp_window, width=30, textvariable=number_of_neurons) \
     .grid(row=1, column=1, pady=5, padx=5)
 
-learning_rate = IntVar()
+learning_rate = DoubleVar()
 learning_rate_textbox = Entry(mlp_window, width=10, textvariable=learning_rate) \
     .grid(row=1, column=2, pady=5, padx=5)
 
@@ -70,14 +70,22 @@ activation_function_comboBox['values'] = ('Sigmoid', 'Hyperbolic Tangent Sigmoid
 activation_function_comboBox.grid(row=1, column=5, pady=5, padx=5)
 
 
-def pressfunction():
-    print(number_of_hidden_layers.get())
-    print(number_of_neurons.get())
-    print(learning_rate.get())
-    print(number_of_epochs.get())
-    print(bias_value.get())
-    print(activation_function_comboBox.get())
+def validateInput():
+    if number_of_hidden_layers.get() == 0:
+        return False
+    if not number_of_neurons.get():
+        return False
+    if learning_rate.get() == 0:
+        return False
+    if number_of_epochs.get() == 0:
+        return False
+    if not activation_function_comboBox.get():
+        return False
+    return True
 
+
+def pressfunction():
+    print(validateInput())
 
 
 # run Button
