@@ -1,9 +1,11 @@
 from tkinter import ttk
+from tkinter import messagebox
 
 import tkinter as tk
 import pandas as pd
 import numpy as np
 from tkinter import *
+import Model
 
 dataFrame = pd.read_csv('penguins.csv')
 
@@ -85,7 +87,11 @@ def validateInput():
 
 
 def run():
-    print(validateInput())
+    if validateInput():
+        Model.Train(X, Y, number_of_hidden_layers.get(), number_of_neurons.get(), learning_rate.get(),
+                    number_of_epochs.get(), bias_value.get(), activation_function_comboBox.get())
+    else:
+        messagebox.showerror("Error", "Enter Valid Input")
 
 
 # run Button
