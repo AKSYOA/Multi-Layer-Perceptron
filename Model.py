@@ -1,5 +1,8 @@
+import numpy as np
 
-def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, number_of_epochs, bias_value, activation_function):
+
+def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, number_of_epochs, bias_value,
+          activation_function):
     print(X)
     print(Y)
     print(number_of_hidden_layers)
@@ -8,4 +11,3 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
     print(number_of_epochs)
     print(bias_value)
     print(activation_function)
-

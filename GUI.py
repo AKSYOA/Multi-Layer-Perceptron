@@ -6,6 +6,7 @@ import tkinter as tk
 import pandas as pd
 import numpy as np
 from tkinter import *
+
 import Model
 
 dataFrame = pd.read_csv('penguins.csv')
@@ -22,7 +23,7 @@ Y = np.asarray(Species)
 # normalization
 min_max_scalar = preprocessing.MinMaxScaler()
 X = min_max_scalar.fit_transform(X)
-print(X)
+# print(X)
 
 # window Creation
 mlp_window = Tk()
@@ -92,9 +93,16 @@ def validateInput():
     return True
 
 
+def extractNumberOfNode(number_of_nodes):
+    number_of_nodes = number_of_nodes.split(",")
+    number_of_nodes = list(map(int, number_of_nodes))
+    return number_of_nodes
+
+
 def run():
     if validateInput():
-        Model.Train(X, Y, number_of_hidden_layers.get(), number_of_neurons.get(), learning_rate.get(),
+        number_of_nodes = extractNumberOfNode(number_of_neurons.get())
+        Model.Train(X, Y, number_of_hidden_layers.get(), number_of_nodes, learning_rate.get(),
                     number_of_epochs.get(), bias_value.get(), activation_function_comboBox.get())
     else:
         messagebox.showerror("Error", "Enter Valid Input")
