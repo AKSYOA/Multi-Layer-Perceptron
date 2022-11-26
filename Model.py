@@ -22,6 +22,7 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
     for i in range(number_of_epochs):
         for j in range(X.shape[0]):
             feedForward(X[j], number_of_hidden_layers, activation_function_type)
+            backPropagate(Y[j], number_of_hidden_layers, number_of_neurons)
 
 
 def initializeWeight(number_of_hidden_layers, number_of_neurons):
@@ -41,3 +42,24 @@ def feedForward(X_sample, number_of_hidden_layers, activation_function_type):
     for i in range(number_of_hidden_layers):
         F = np.dot(Weights[i + 1], nodes_output[i])
         nodes_output.append(activationFunction(F, activation_function_type))
+
+
+def backPropagate(Y_sample, number_of_hidden_layers, number_of_neurons):
+    # Output Layer
+    Y_sample = Y_sample.reshape(3, 1)
+    F_dash = nodes_output[number_of_hidden_layers] * (1 - nodes_output[number_of_hidden_layers])
+    err = (Y_sample - nodes_output[number_of_hidden_layers]) * F_dash
+    errors.append(err)
+
+    # Hidden Layers
+    for i in range(1, number_of_hidden_layers + 1):
+        F_dash = nodes_output[number_of_hidden_layers - i] * (1 - nodes_output[number_of_hidden_layers - i])
+
+        number_of_columns = Weights[number_of_hidden_layers - (i - 1)].shape[1]
+        number_of_rows = Weights[number_of_hidden_layers - (i - 1)].shape[0]
+        err_sum = np.zeros((number_of_columns, 1))
+
+        for j in range(number_of_columns):
+            err_sum[j] = np.sum(Weights[number_of_hidden_layers - (i - 1)][:, j].reshape(number_of_rows, 1) * errors[0])
+
+        errors.insert(0, err_sum * F_dash)
