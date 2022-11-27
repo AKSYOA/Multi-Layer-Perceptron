@@ -16,6 +16,11 @@ def activationFunction(x, activation_function):
         return np.tanh(x)
 
 
+def clearLists():
+    nodes_output.clear()
+    errors.clear()
+
+
 def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, number_of_epochs, bias_value,
           activation_function_type):
     initializeWeight(number_of_hidden_layers, number_of_neurons)
@@ -23,6 +28,8 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
         for j in range(X.shape[0]):
             feedForward(X[j], number_of_hidden_layers, activation_function_type)
             backPropagate(Y[j], number_of_hidden_layers, number_of_neurons)
+            updateWeights(X[j], number_of_hidden_layers, learning_rate)
+            clearLists()
 
 
 def initializeWeight(number_of_hidden_layers, number_of_neurons):
@@ -36,12 +43,14 @@ def feedForward(X_sample, number_of_hidden_layers, activation_function_type):
     # first layer
     X_sample = X_sample.reshape(5, 1)
     F = np.dot(Weights[0], X_sample)
-    nodes_output.append(activationFunction(F, activation_function_type))
+    output = activationFunction(F, activation_function_type)
+    nodes_output.append(output)
 
     # rest of layers
     for i in range(number_of_hidden_layers):
         F = np.dot(Weights[i + 1], nodes_output[i])
-        nodes_output.append(activationFunction(F, activation_function_type))
+        output = activationFunction(F, activation_function_type)
+        nodes_output.append(output)
 
 
 def backPropagate(Y_sample, number_of_hidden_layers, number_of_neurons):
@@ -63,3 +72,11 @@ def backPropagate(Y_sample, number_of_hidden_layers, number_of_neurons):
             err_sum[j] = np.sum(Weights[number_of_hidden_layers - (i - 1)][:, j].reshape(number_of_rows, 1) * errors[0])
 
         errors.insert(0, err_sum * F_dash)
+
+
+def updateWeights(X_sample, number_of_hidden_layers, learning_rate):
+    for i in range(number_of_hidden_layers + 1):
+        if i != 0:
+            Weights[0] = np.add(Weights[0], (learning_rate * errors[0] * X_sample))
+        else:
+            Weights[i] = np.add(Weights[i], (learning_rate * errors[0] * nodes_output[i]))
