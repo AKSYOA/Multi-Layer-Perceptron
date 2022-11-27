@@ -30,6 +30,7 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
             backPropagate(Y[j], number_of_hidden_layers, number_of_neurons)
             updateWeights(X[j], number_of_hidden_layers, learning_rate)
             clearLists()
+    TrainAccuracy(X, Y, number_of_hidden_layers, activation_function_type)
 
 
 def initializeWeight(number_of_hidden_layers, number_of_neurons):
@@ -76,7 +77,16 @@ def backPropagate(Y_sample, number_of_hidden_layers, number_of_neurons):
 
 def updateWeights(X_sample, number_of_hidden_layers, learning_rate):
     for i in range(number_of_hidden_layers + 1):
-        if i != 0:
+        if i == 0:
             Weights[0] = np.add(Weights[0], (learning_rate * errors[0] * X_sample))
         else:
-            Weights[i] = np.add(Weights[i], (learning_rate * errors[0] * nodes_output[i]))
+            Weights[i] = np.add(Weights[i], (learning_rate * errors[i] * nodes_output[i]))
+
+
+def TrainAccuracy(X, Y, number_of_hidden_layers, activation_function_type):
+    nodes_output.clear()
+    for i in range(X.shape[0]):
+        print(i)
+        feedForward(X[i], number_of_hidden_layers, activation_function_type)
+        print(nodes_output[-1])
+        nodes_output.clear()
