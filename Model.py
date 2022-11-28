@@ -43,7 +43,7 @@ def initializeWeight(number_of_hidden_layers, number_of_neurons):
     number_of_neurons.insert(0, 5)  # 5 neurons (input Layer)
     number_of_neurons.append(3)  # 3 neurons (output Layer)
     for i in range(number_of_hidden_layers + 1):
-        Weights.append(np.random.rand(number_of_neurons[i + 1], number_of_neurons[i]))
+        Weights.append(np.random.randn(number_of_neurons[i + 1], number_of_neurons[i]))
 
 
 def feedForward(X_sample, number_of_hidden_layers, activation_function_type):
