@@ -1,5 +1,6 @@
 import numpy as np
 from math import sqrt
+from sklearn.metrics import confusion_matrix
 
 Weights = []
 nodes_output = []
@@ -42,7 +43,8 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
             backPropagate(Y_Train[j], number_of_hidden_layers, number_of_neurons)
             updateWeights(X_Train[j], number_of_hidden_layers, learning_rate)
             clearLists()
-    TestAccuracy(X_Test, Y_Test, number_of_hidden_layers, activation_function_type)
+    DataAccuracy(X_Train, Y_Train, number_of_hidden_layers, activation_function_type)
+    DataAccuracy(X_Test, Y_Test, number_of_hidden_layers, activation_function_type)
 
 
 def initializeWeight(number_of_hidden_layers, number_of_neurons):
@@ -97,8 +99,27 @@ def updateWeights(X_sample, number_of_hidden_layers, learning_rate):
             Weights[i] = np.add(Weights[i], (learning_rate * errors[i] * nodes_output[i - 1].reshape(cols, rows)))
 
 
-def TestAccuracy(X_test, Y_test, number_of_hidden_layers, activation_function_type):
-    for i in range(X_test.shape[0]):
+def DataAccuracy(X, Y, number_of_hidden_layers, activation_function_type):
+    y_prediction_class = []
+    y_actual_class = []
+    print(len(y_prediction_class))
+    for i in range(X.shape[0]):
         nodes_output.clear()
-        feedForward(X_test[i], number_of_hidden_layers, activation_function_type)
-        print(nodes_output[-1])
+        feedForward(X[i], number_of_hidden_layers, activation_function_type)
+        y_prediction, y_actual = Evaluate(nodes_output[-1], Y[i])
+        y_prediction_class.append(y_prediction)
+        y_actual_class.append(y_actual)
+    buildConfusionMatrix(y_prediction_class, y_actual_class)
+
+
+def Evaluate(output, Y_sample):
+    Y_sample = Y_sample.reshape(3, 1)
+    return np.argmax(output), np.argmax(Y_sample)
+
+
+def buildConfusionMatrix(y_prediction_class, y_actual_class):
+    matrix = confusion_matrix(y_actual_class, y_prediction_class)
+    print(matrix)
+    correct = np.trace(matrix)
+    accuracy = correct / np.sum(matrix) * 100
+    print(accuracy)
