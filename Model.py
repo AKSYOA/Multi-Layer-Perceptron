@@ -1,4 +1,5 @@
 import numpy as np
+from math import sqrt
 
 Weights = []
 nodes_output = []
@@ -7,6 +8,11 @@ errors = []
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
+
+
+def xavierInitializer(number_of_neurons, rows, cols):
+    limit = 1 / sqrt(number_of_neurons)
+    return np.random.uniform(-limit, limit, size=(rows, cols))
 
 
 def activationFunction(x, activation_function):
