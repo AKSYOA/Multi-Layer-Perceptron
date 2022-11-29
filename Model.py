@@ -8,11 +8,11 @@ errors = []
 
 
 def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+    return 1.0 / (1.0 + np.exp(-x))
 
 
 def xavierInitializer(number_of_neurons, rows, cols):
-    limit = 1 / sqrt(number_of_neurons)
+    limit = 1.0 / sqrt(number_of_neurons)
     return np.random.uniform(-limit, limit, size=(rows, cols))
 
 
@@ -102,7 +102,6 @@ def updateWeights(X_sample, number_of_hidden_layers, learning_rate):
 def DataAccuracy(X, Y, number_of_hidden_layers, activation_function_type):
     y_prediction_class = []
     y_actual_class = []
-    print(len(y_prediction_class))
     for i in range(X.shape[0]):
         nodes_output.clear()
         feedForward(X[i], number_of_hidden_layers, activation_function_type)
