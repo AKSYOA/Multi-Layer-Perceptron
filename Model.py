@@ -1,6 +1,5 @@
 import numpy as np
 from math import sqrt
-from sklearn.metrics import confusion_matrix
 
 Weights = []
 nodes_output = []
@@ -117,8 +116,12 @@ def Evaluate(output, Y_sample):
 
 
 def buildConfusionMatrix(y_prediction_class, y_actual_class):
-    matrix = confusion_matrix(y_actual_class, y_prediction_class)
+    matrix = np.zeros((3, 3), dtype=np.int32)
+
+    for i in range(len(y_actual_class)):
+        matrix[y_actual_class[i]][y_prediction_class[i]] += 1
     print(matrix)
+
     correct = np.trace(matrix)
     accuracy = correct / np.sum(matrix) * 100
-    print(accuracy)
+    print('accuracy: {:.2f}'.format(accuracy))
