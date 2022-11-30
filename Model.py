@@ -10,11 +10,18 @@ def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
 
-def activationFunction(x, activation_function):
-    if activation_function == 'Sigmoid':
+def activationFunction(x, activation_function_type):
+    if activation_function_type == 'Sigmoid':
         return sigmoid(x)
     else:
         return np.tanh(x)
+
+
+def differentialActivationFunction(index, activation_function_type):
+    if activation_function_type == 'Sigmoid':
+        return nodes_output[index] * (1 - nodes_output[index])
+    else:
+        return (1 - nodes_output[index]) * (1 + nodes_output[index])
 
 
 def clearLists():
@@ -35,7 +42,7 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
     for i in range(number_of_epochs):
         for j in range(X_Train.shape[0]):
             feedForward(X_Train[j], number_of_hidden_layers, activation_function_type)
-            backPropagate(Y_Train[j], number_of_hidden_layers, number_of_neurons)
+            backPropagate(Y_Train[j], number_of_hidden_layers, activation_function_type)
             updateWeights(X_Train[j], number_of_hidden_layers, learning_rate)
             clearLists()
     DataAccuracy(X_Train, Y_Train, number_of_hidden_layers, activation_function_type, 'Training')
@@ -63,17 +70,18 @@ def feedForward(X_sample, number_of_hidden_layers, activation_function_type):
         nodes_output.append(output)
 
 
-def backPropagate(Y_sample, number_of_hidden_layers, number_of_neurons):
+def backPropagate(Y_sample, number_of_hidden_layers, activation_function_type):
     # Output Layer
     Y_sample = Y_sample.reshape(3, 1)
-    F_dash = nodes_output[number_of_hidden_layers] * (1 - nodes_output[number_of_hidden_layers])
+    # F_dash = nodes_output[number_of_hidden_layers] * (1 - nodes_output[number_of_hidden_layers])
+    F_dash = differentialActivationFunction(number_of_hidden_layers, activation_function_type)
     err = (Y_sample - nodes_output[number_of_hidden_layers]) * F_dash
     errors.append(err)
 
     # Hidden Layers
     for i in range(1, number_of_hidden_layers + 1):
-        F_dash = nodes_output[number_of_hidden_layers - i] * (1 - nodes_output[number_of_hidden_layers - i])
-
+        # F_dash = nodes_output[number_of_hidden_layers - i] * (1 - nodes_output[number_of_hidden_layers - i])
+        F_dash = differentialActivationFunction(number_of_hidden_layers - i, activation_function_type)
         number_of_columns = Weights[number_of_hidden_layers - (i - 1)].shape[1]
         number_of_rows = Weights[number_of_hidden_layers - (i - 1)].shape[0]
         err_sum = np.zeros((number_of_columns, 1))
