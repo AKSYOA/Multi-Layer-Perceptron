@@ -10,11 +10,6 @@ def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
 
-def xavierInitializer(number_of_neurons, rows, cols):
-    limit = 1.0 / sqrt(number_of_neurons)
-    return np.random.uniform(-limit, limit, size=(rows, cols))
-
-
 def activationFunction(x, activation_function):
     if activation_function == 'Sigmoid':
         return sigmoid(x)
@@ -29,6 +24,7 @@ def clearLists():
 
 def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, number_of_epochs, bias_value,
           activation_function_type):
+    clearLists()
     initializeWeight(number_of_hidden_layers, number_of_neurons)
 
     X_Train = np.vstack((X[:30], X[50:80], X[100:130]))
@@ -42,8 +38,8 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
             backPropagate(Y_Train[j], number_of_hidden_layers, number_of_neurons)
             updateWeights(X_Train[j], number_of_hidden_layers, learning_rate)
             clearLists()
-    DataAccuracy(X_Train, Y_Train, number_of_hidden_layers, activation_function_type)
-    DataAccuracy(X_Test, Y_Test, number_of_hidden_layers, activation_function_type)
+    DataAccuracy(X_Train, Y_Train, number_of_hidden_layers, activation_function_type, 'Training')
+    DataAccuracy(X_Test, Y_Test, number_of_hidden_layers, activation_function_type, 'Testing')
 
 
 def initializeWeight(number_of_hidden_layers, number_of_neurons):
@@ -98,7 +94,7 @@ def updateWeights(X_sample, number_of_hidden_layers, learning_rate):
             Weights[i] = np.add(Weights[i], (learning_rate * errors[i] * nodes_output[i - 1].reshape(cols, rows)))
 
 
-def DataAccuracy(X, Y, number_of_hidden_layers, activation_function_type):
+def DataAccuracy(X, Y, number_of_hidden_layers, activation_function_type, accuracyType):
     y_prediction_class = []
     y_actual_class = []
     for i in range(X.shape[0]):
@@ -107,7 +103,7 @@ def DataAccuracy(X, Y, number_of_hidden_layers, activation_function_type):
         y_prediction, y_actual = Evaluate(nodes_output[-1], Y[i])
         y_prediction_class.append(y_prediction)
         y_actual_class.append(y_actual)
-    buildConfusionMatrix(y_prediction_class, y_actual_class)
+    buildConfusionMatrix(y_prediction_class, y_actual_class, accuracyType)
 
 
 def Evaluate(output, Y_sample):
@@ -115,7 +111,7 @@ def Evaluate(output, Y_sample):
     return np.argmax(output), np.argmax(Y_sample)
 
 
-def buildConfusionMatrix(y_prediction_class, y_actual_class):
+def buildConfusionMatrix(y_prediction_class, y_actual_class, accuracyType):
     matrix = np.zeros((3, 3), dtype=np.int32)
 
     for i in range(len(y_actual_class)):
@@ -124,4 +120,4 @@ def buildConfusionMatrix(y_prediction_class, y_actual_class):
 
     correct = np.trace(matrix)
     accuracy = correct / np.sum(matrix) * 100
-    print('accuracy: {:.2f}'.format(accuracy))
+    print(accuracyType, 'accuracy: {:.2f}'.format(accuracy))
