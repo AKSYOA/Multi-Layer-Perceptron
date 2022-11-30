@@ -1,5 +1,4 @@
 import numpy as np
-from math import sqrt
 
 Weights = []
 nodes_output = []
@@ -73,14 +72,12 @@ def feedForward(X_sample, number_of_hidden_layers, activation_function_type):
 def backPropagate(Y_sample, number_of_hidden_layers, activation_function_type):
     # Output Layer
     Y_sample = Y_sample.reshape(3, 1)
-    # F_dash = nodes_output[number_of_hidden_layers] * (1 - nodes_output[number_of_hidden_layers])
     F_dash = differentialActivationFunction(number_of_hidden_layers, activation_function_type)
     err = (Y_sample - nodes_output[number_of_hidden_layers]) * F_dash
     errors.append(err)
 
     # Hidden Layers
     for i in range(1, number_of_hidden_layers + 1):
-        # F_dash = nodes_output[number_of_hidden_layers - i] * (1 - nodes_output[number_of_hidden_layers - i])
         F_dash = differentialActivationFunction(number_of_hidden_layers - i, activation_function_type)
         number_of_columns = Weights[number_of_hidden_layers - (i - 1)].shape[1]
         number_of_rows = Weights[number_of_hidden_layers - (i - 1)].shape[0]
