@@ -2,7 +2,6 @@ from tkinter import ttk
 from tkinter import messagebox
 from sklearn import preprocessing
 
-import tkinter as tk
 import pandas as pd
 import numpy as np
 from tkinter import *
