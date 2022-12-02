@@ -3,6 +3,7 @@ import numpy as np
 Weights = []
 nodes_output = []
 errors = []
+bias = []
 
 
 def sigmoid(x):
@@ -31,7 +32,7 @@ def clearLists():
 def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, number_of_epochs, bias_value,
           activation_function_type):
     clearLists()
-    initializeWeight(number_of_hidden_layers, number_of_neurons)
+    initializeWeight(number_of_hidden_layers, number_of_neurons, bias_value)
 
     X_Train = np.vstack((X[:30], X[50:80], X[100:130]))
     Y_Train = np.vstack((Y[:30], Y[50:80], Y[100:130]))
@@ -48,23 +49,29 @@ def Train(X, Y, number_of_hidden_layers, number_of_neurons, learning_rate, numbe
     DataAccuracy(X_Test, Y_Test, number_of_hidden_layers, activation_function_type, 'Testing')
 
 
-def initializeWeight(number_of_hidden_layers, number_of_neurons):
+def initializeWeight(number_of_hidden_layers, number_of_neurons, bias_value):
     number_of_neurons.insert(0, 5)  # 5 neurons (input Layer)
     number_of_neurons.append(3)  # 3 neurons (output Layer)
     for i in range(number_of_hidden_layers + 1):
         Weights.append(np.random.randn(number_of_neurons[i + 1], number_of_neurons[i]))
+
+        if bias_value == 1:
+            bias.append(np.random.randn(number_of_neurons[i + 1], 1))
+        else:
+            bias.append(np.zeros((number_of_neurons[i + 1], 1)))
 
 
 def feedForward(X_sample, number_of_hidden_layers, activation_function_type):
     # first layer
     X_sample = X_sample.reshape(5, 1)
     F = np.dot(Weights[0], X_sample)
+    F = F + bias[0]
     output = activationFunction(F, activation_function_type)
     nodes_output.append(output)
-
     # rest of layers
     for i in range(number_of_hidden_layers):
         F = np.dot(Weights[i + 1], nodes_output[i])
+        F = F + bias[i + 1]
         output = activationFunction(F, activation_function_type)
         nodes_output.append(output)
 
@@ -93,10 +100,12 @@ def updateWeights(X_sample, number_of_hidden_layers, learning_rate):
     for i in range(number_of_hidden_layers + 1):
         if i == 0:
             Weights[0] = np.add(Weights[0], (learning_rate * errors[0] * X_sample))
+            bias[0] = np.add(bias[0], (learning_rate * errors[0]))
         else:
             rows = nodes_output[i - 1].shape[0]
             cols = nodes_output[i - 1].shape[1]
             Weights[i] = np.add(Weights[i], (learning_rate * errors[i] * nodes_output[i - 1].reshape(cols, rows)))
+            bias[i] = np.add(bias[i], (learning_rate * errors[i]))
 
 
 def DataAccuracy(X, Y, number_of_hidden_layers, activation_function_type, accuracyType):
